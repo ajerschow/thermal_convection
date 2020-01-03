@@ -1,0 +1,160 @@
+<html>
+<head>
+  <!-- Plotly.js -->
+  <!-- <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> -->
+  <!--<script 
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script> -->
+        
+  <script src="LIBS/bessel.js"></script>
+  <script 
+        src="LIBS/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+<script src="LIBS/plotly-latest.min.js"></script>
+
+
+  <title>Thermal Convection Flow Profile in a Cylindrical Tube</title>
+  <link href="template.css" rel="stylesheet">
+</head>
+
+<body>
+
+<p>
+   <div id="entry-div" class="form-style-5">
+<h1>Thermal Convection Flow Profile in a Cylindrical Tube</h1>
+
+
+<fieldset>
+<img src="equation_speed_distr_conv.png" width=350>
+<img src="Rayleigh_number.png" width=120>
+
+<p>
+
+
+<h3>Ra = <span id='RaText'>600</span> (Rayleigh number)</h3>
+<input type="range" min="1" max="2000" value="500" class="slider" id="RaRange">
+
+<h3>n = <span id='nText'>1</span> (order)</h3>
+<input type="range" min="1" max="10" value="1" class="slider" id="nRange">
+</fieldset>
+
+<!-- <hr> -->
+<p>
+
+<ul>
+  <li> G.A. Ostroumov, <i>Free convection under the conditions of the internal problem</i>,
+National Advisory Committee for Aeronautics, Tech. Memorandum 1407
+(1958).</li>
+<li>B. Kharkov, X. Duan, J. W. Canary, A. Jerschow, <i>Effect of convection and B1 inhomogeneity on singlet relaxation experiments</i>, J. Magn. Reson. 2017, 284, 1-7 <a href="https://doi.org/10.1016/j.jmr.2017.09.005">[journal link]</a>, <a href="https://authors.elsevier.com/a/1Vkv~_OpItj~0r">[free access link]</a> </li>
+<li>A. Jerschow, <i>Thermal convection currents in NMR: flow profiles and
+implications for coherence pathway selection</i>, J. Magn. Reson. 145 (2000), <a href="https://doi.org/10.1006/jmre.2000.2083">[journal link]</a>.
+125-131.</li>
+<li>A. Jerschow, N. M&uuml;ller, <i>Convection Compensation in Gradient Enhanced Nuclear Magnetic Resonance Spectroscopy</i>, J. Magn. Reson. 1998, 132, 13-8, <a href="http://dx.doi.org/10.1006/jmre.1998.1400">[journal link]</a></li>
+<li>A. Jerschow, N. M&uuml;ller, <i>Suppression of Convection Artifacts in Stimulated Echo Diffusion Experiments. Double Stimulated Echo Experiments</i>, J. Magn. Reson. 1997, 125, 372-5.<a href="https://doi.org/10.1006/jmre.1997.1123">[journal link]</a></li>
+
+</ul>
+
+
+</div>
+
+   <!-- <div id="plot-div" style="width:90%;height:500px;"></div> -->
+   <div id="plot-div"></div>
+  
+
+
+<script>
+
+$(document).ready(function(){
+
+  $("#RaText").text($("#RaRange").val());
+  $("#nText").text($("#nRange").val());
+
+  update_plot();
+
+  $("#RaRange").change(function(){
+    // alert('change');
+    var newval=$(this).val();
+    $("#RaText").text(newval);
+    update_plot();
+  });
+
+  $("#nRange").change(function(){
+    // alert('change');
+    var newval=$(this).val();
+    $("#nText").text(newval);
+    update_plot();
+  });
+});
+
+  
+function zero2D(rows, cols) {
+  var array = [], row = [];
+  while (cols--) row.push(0);
+  while (rows--) array.push(row.slice());
+  return array;
+}
+
+
+function update_plot() {
+
+  var npt=100;
+  var x=[];
+  var y=[];
+  var z_data=[];
+
+  // var Ra = 1600;
+  var Ra=$("#RaRange").val();
+  var n=$("#nRange").val();
+  
+  var k = Ra**0.25;
+  // r=linspace(0,1,100);
+  // f(l,m) = sin(phi(l)) * (besselj(1, k*r(m)) * besseli(1, k) - besseli(1, k*r(m)) * besselj(1, k));
+
+  z_data=zero2D(51,51);
+
+  for (i=0;i<51;i++) {
+    x[i]=-1+i*2.0/50.0;
+    for(j=0;j<51;j++){
+      y[j]=-1+j*2.0/50.0;
+
+      var r=Math.sqrt(x[i]**2+y[j]**2);
+      console.log('r:'+r+' x:'+x[i]+' y:'+y[j]);
+      var phi=Math.atan2(y[j],x[i]);
+      if (r<=1){
+        z_data[i][j]=Math.sin(n*phi)*(BESSEL.besselj(k*r,n)*BESSEL.besseli(k,n)-BESSEL.besseli(k*r,n)*BESSEL.besselj(k,n));
+        // z_data[i][j]=Math.sin(phi);
+      }
+    }
+  }
+
+
+  var data = [{
+             x:x,
+             y:y,
+             z: z_data,
+             type: 'surface'
+          }];
+    
+  var layout = {
+    title: 'velocity profile',
+    autosize: false,
+    width: 500,
+    height: 500,
+    margin: {
+      l: 65,
+      r: 50,
+      b: 65,
+      t: 90,
+    }
+  };
+  Plotly.newPlot('plot-div', data, layout);
+}
+
+
+
+</script>
+
+</body>
+</html>
