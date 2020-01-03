@@ -1,0 +1,18 @@
+Display Thermal Convection Flow Profile in a Cylindrical Tube based on Rayleigh number and order. 
+Written in HTML/JavaScript using Plotly, jQuery, and Bessel function libraries.
+
+Hosted here: 
+http://www.nyu.edu/projects/jerschow/Convection/Convection_deployed.html
+
+relevant literature:
+
+(1) G.A. Ostroumov, Free convection under the conditions of the internal problem, National Advisory Committee 
+for Aeronautics, Tech. Memorandum 1407 (1958).
+(2) B. Kharkov, X. Duan, J. W. Canary, A. Jerschow, Effect of convection and B1 inhomogeneity on singlet 
+relaxation experiments, J. Magn. Reson. 2017, 284, 1-7 [journal link], [free access link]
+(3) A. Jerschow, Thermal convection currents in NMR: flow profiles and implications for coherence 
+pathway selection, J. Magn. Reson. 145 (2000), [journal link]. 125-131.
+(4) A. Jerschow, N. Müller, Convection Compensation in Gradient Enhanced Nuclear Magnetic Resonance Spectroscopy,
+J. Magn. Reson. 1998, 132, 13-8, [journal link]
+(5) A. Jerschow, N. Müller, Suppression of Convection Artifacts in Stimulated Echo Diffusion Experiments. 
+Double Stimulated Echo Experiments, J. Magn. Reson. 1997, 125, 372-5.[journal link]
